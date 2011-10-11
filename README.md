@@ -1,4 +1,4 @@
-Redi - the force is strong with this one
+Redi
 ----------
 
 Pooled redis puts a layer of indirection between server pool and key ring
