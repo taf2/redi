@@ -6,7 +6,7 @@ Pooled redis puts a layer of indirection between server pool and key ring
 
 The idea comes from http://blog.zawodny.com/2011/02/26/redis-sharding-at-craigslist/
 
-  gem install redis-ring
+  gem install redi
 
 
 Create a configuration file:
