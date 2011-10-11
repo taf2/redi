@@ -5,8 +5,7 @@ require 'redis'
 require 'redis/hash_ring'
 require 'redis/namespace'
 
-class Redis
-class Ring
+class Redi
 
   def self.get(key)
     pool.redis_by_key(key).get(key)
@@ -17,11 +16,15 @@ class Ring
   end
 
   def self.pool
-    @pool ||= Pool.new(self.config) #Redis.new(self.config)
+    @pool ||= Pool.new(self.config)
+  end
+
+  def self.config=(config)
+    @config = config
   end
 
   def self.config
-    @config ||= YAML.load_file(File.join(RAILS_ROOT,'config/me.yml'))[RAILS_ENV]
+    @config
   end
 
   # provide a key to name to host:port mapping
@@ -97,7 +100,6 @@ class Ring
   end
 
 end
-end
 
 if __FILE__ == $0
 require 'rubygems'
@@ -149,7 +151,7 @@ TEST_CONFIG = %(
   class TestIt < Test::Unit::TestCase
 
     def test_redis_pool
-      pool = Redis::Ring::Pool.new(YAML.load(TEST_CONFIG))
+      pool = Redi::Pool.new(YAML.load(TEST_CONFIG))
       redis = pool.redis_by_key('me:foo:1')
       assert_equal :n25, redis.namespace
       redis.flushall
@@ -158,7 +160,6 @@ TEST_CONFIG = %(
     end
 
     def test_using_hash_ring_strategy
-      return
       node_class = Struct.new(:id, :to_s)
       buckets = []
       128.times do|i|
