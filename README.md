@@ -20,8 +20,8 @@ Create a configuration file:
         :db: 0
         :buckets: 65 - 127
 
-The configuration should look like a normal redis configuration with the addition of a buckets key.  This tells redi to how many buckets it should
-hash keys before mapping them to the given server.  In the example above, it would be possible to scale those 2 servers up to 128 servers without 
+The configuration should look like a normal redis configuration with the addition of a buckets key.  This tells redi how many buckets it should
+hash keys to before mapping them to the configured server.  In the example above, it would be possible to scale those 2 servers up to 128 servers without 
 rekeying, you can follow the 5 steps below to add a new server each time.
 
 1. create new server
