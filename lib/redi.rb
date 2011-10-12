@@ -16,7 +16,7 @@ class Redi
   end
 
   def self.flushall
-    @pool.flushall
+    pool.flushall
   end
 
   def self.mock!
