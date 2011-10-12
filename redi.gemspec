@@ -21,8 +21,6 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
 #  s.add_development_dependency "rails"
 
-  s.add_runtime_dependency "json"
-  s.add_runtime_dependency "active_support"
   s.add_runtime_dependency "redis"
   s.add_runtime_dependency "redis-namespace"
 end
