@@ -15,6 +15,14 @@ class Redi
     pool.redis_by_key(key).set(key, val)
   end
 
+  def self.flushall
+    @pool.flushall
+  end
+
+  def self.mock!
+    pool.mock!
+  end
+
   def self.pool
     @pool ||= Pool.new(self.config)
   end
@@ -33,45 +41,50 @@ class Redi
   #
   # sample configuration:
   #
-  # :keyspace:
-  #   - :n0: 0
-  #   - :n1: 1
-  #   - :n2: 0
-  #   - :n3: 1
-  #   - :n4: 0
-  # :servers:
-  #   - :host:
-  #     :port:
-  #     :db:
-  #   - :host:
-  #     :port:
-  #     :db:
+  # - :host:
+  #   :port:
+  #   :db:
+  #   :buckets: 0 - 64
+  # - :host:
+  #   :port:
+  #   :db:
+  #   :buckets: 65 - 127
   #
   class Pool
     attr_reader :keyspace, :servers
     def initialize(config)
-      @key_type = Struct.new(:id, :to_s)
-      keyspace = config[:keyspace]
-
-      # create bucket set
-      @buckets = keyspace.each_with_index.map {|k,i| @key_type.new(i, k.keys.first) }
+      key_type = Struct.new(:id, :to_s)
 
       # build server pool
-      @servers = config[:servers].map {|cfg| Redis.new(cfg) }
-
-      # create the mapping from bucket to server
       @bucket2server = {}
-      keyspace.each do|ks|
-        @bucket2server[ks.keys.first] = @servers[ks.values.first]
-      end
+      buckets = []
+      @servers = config.map {|cfg|
+        bucket_range = cfg.delete(:buckets)
+        s, e = bucket_range.split('-').map {|n| n.to_i }
+        conn = Redis.new(cfg)
+        (s..e).each do|i|
+          bucket_name = "n#{i}"
+          buckets << key_type.new(i, bucket_name)
+          @bucket2server[bucket_name] = conn
+        end
+        conn
+      }
 
       # create the keyring to map redis keys to buckets
-      @keyring  = Redis::HashRing.new(@buckets)
+      @keyring  = Redis::HashRing.new(buckets)
     end
 
     def redis_by_key(key)
       bucket = @keyring.get_node(key)
       Redis::Namespace.new(bucket.to_s, :redis => @bucket2server[bucket.to_s])
+    end
+
+    def flushall
+      @servers.map {|s| s.flushall }
+    end
+
+    def mock!
+      @servers.map! {|s| Mock.new }
     end
 
   end
@@ -106,54 +119,21 @@ require 'rubygems'
 require 'test/unit'
 
 TEST_CONFIG = %(
-  :keyspace:
-    - :n0: 0
-    - :n1: 1
-    - :n2: 0
-    - :n3: 1
-    - :n4: 0
-    - :n5: 1
-    - :n6: 0
-    - :n7: 1
-    - :n8: 0
-    - :n9: 1
-    - :n10: 0
-    - :n11: 1
-    - :n12: 0
-    - :n13: 1
-    - :n14: 0
-    - :n15: 1
-    - :n16: 0
-    - :n17: 1
-    - :n18: 0
-    - :n19: 1
-    - :n20: 0
-    - :n21: 1
-    - :n22: 0
-    - :n23: 1
-    - :n24: 0
-    - :n25: 1
-    - :n26: 0
-    - :n27: 1
-    - :n28: 0
-    - :n29: 1
-    - :n30: 0
-    - :n31: 1
-    - :n32: 0
-  :servers:
-    - :host: 127.0.0.1
-      :port: 6379
-      :db: 0
-    - :host: 127.0.0.1
-      :port: 6379
-      :db: 1
+  - :host: 127.0.0.1
+    :port: 6379
+    :db: 0
+    :buckets: 0-64
+  - :host: 127.0.0.1
+    :port: 6379
+    :db: 1
+    :buckets: 65-127
 )
   class TestIt < Test::Unit::TestCase
 
     def test_redis_pool
       pool = Redi::Pool.new(YAML.load(TEST_CONFIG))
       redis = pool.redis_by_key('me:foo:1')
-      assert_equal :n25, redis.namespace
+      assert_equal "n25", redis.namespace
       redis.flushall
       redis.set("me:foo:1", "hello")
       assert_equal "hello", redis.get("me:foo:1")
