@@ -15,16 +15,20 @@ class Redi
     pool.redis_by_key(key).set(key, val)
   end
 
+  def self.del(key)
+    pool.redis_by_key(key).del(key)
+  end
+
   def self.flushall
     pool.flushall
   end
 
   def self.mock!
-    pool.mock!
+    pool(true).mock!
   end
 
-  def self.pool
-    @pool ||= Pool.new(self.config)
+  def self.pool(mock=false)
+    @pool ||= Pool.new(self.config,mock)
   end
 
   def self.config=(config)
@@ -52,7 +56,7 @@ class Redi
   #
   class Pool
     attr_reader :keyspace, :servers
-    def initialize(config)
+    def initialize(config,mock=false)
       key_type = Struct.new(:id, :to_s)
 
       # build server pool
@@ -61,7 +65,11 @@ class Redi
       @servers = config.map {|cfg|
         bucket_range = cfg.delete(:buckets)
         s, e = bucket_range.split('-').map {|n| n.to_i }
-        conn = Redis.new(cfg)
+        if mock
+          conn = Mock.new
+        else
+          conn = Redis.new(cfg)
+        end
         (s..e).each do|i|
           bucket_name = "n#{i}"
           buckets << key_type.new(i, bucket_name)
@@ -72,6 +80,11 @@ class Redi
 
       # create the keyring to map redis keys to buckets
       @keyring  = Redis::HashRing.new(buckets)
+    end
+
+    def qualified_key_for(key)
+      bucket = @keyring.get_node(key)
+      "#{bucket.to_s}:#{key}"
     end
 
     def redis_by_key(key)
@@ -85,6 +98,9 @@ class Redi
 
     def mock!
       @servers.map! {|s| Mock.new }
+      @bucket2server.keys.each_with_index do|k,i|
+        @bucket2server[k] = @servers[i % @servers.size]
+      end
     end
 
   end
@@ -96,6 +112,10 @@ class Redi
 
     def get(key)
       @store[key]
+    end
+
+    def del(key)
+      @store.delete(key)
     end
 
     def set(key, val)
