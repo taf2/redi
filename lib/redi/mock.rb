@@ -1,3 +1,7 @@
+#
+# Instead of writing/reading from redis, create a in memory Hash, making it easy to
+# test without redis server running
+#
 class Redi
 
   def self.mock!
