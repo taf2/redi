@@ -42,8 +42,6 @@ class TestRedi < Test::Unit::TestCase
       bucket2server[bucket.to_s] = servers[bucket.id % servers.size].to_s
     end
 
-    puts bucket2server.inspect
-
     servers_used = {}
 
     buckets_used = {}
@@ -57,7 +55,5 @@ class TestRedi < Test::Unit::TestCase
       buckets_used[ bucket.to_s ] ||= 0
       buckets_used[ bucket.to_s ] += 1
     end
-    puts servers_used.inspect
-    puts buckets_used.inspect
   end
 end
