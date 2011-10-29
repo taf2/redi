@@ -1,5 +1,6 @@
 require 'test/unit'
 require 'redi'
+require 'yaml'
 
 TEST_CONFIG = %(
   - :host: 127.0.0.1
