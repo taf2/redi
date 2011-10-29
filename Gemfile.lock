@@ -1,13 +1,14 @@
 PATH
   remote: .
   specs:
-    redi (0.0.2)
+    redi (0.0.5)
       redis
       redis-namespace
 
 GEM
   remote: http://rubygems.org/
   specs:
+    rake (0.9.2.2)
     redis (2.2.2)
     redis-namespace (1.1.0)
       redis (< 3.0.0)
@@ -16,4 +17,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  rake
   redi!
