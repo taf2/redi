@@ -19,11 +19,8 @@ class Redi
     pool.flushall
   end
 
-  def self.mock!
-    pool(true).mock!
-  end
-
   def self.pool(mock=false)
+    require 'redi/mock' if mock
     @pool ||= Pool.new(self.config,mock)
   end
 
@@ -33,33 +30,6 @@ class Redi
 
   def self.config
     @config
-  end
-
-  class Mock
-    def initialize
-      @store = {}
-    end
-
-    def get(key)
-      @store[key]
-    end
-
-    def del(key)
-      @store.delete(key)
-    end
-
-    def set(key, val)
-      @store[key] = val
-    end
-
-    def mget(*keys)
-      keys.map {|k| get(k) }
-    end
-
-    def flushall
-      @store = {}
-    end
-
   end
 
 end

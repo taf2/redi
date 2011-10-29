@@ -32,6 +32,7 @@ class Redi
         bucket_range = cfg.delete(:buckets)
         s, e = bucket_range.split('-').map {|n| n.to_i }
         if mock
+          require 'redi/mock'
           conn = Mock.new
         else
           conn = Redis.new(cfg)
@@ -60,13 +61,6 @@ class Redi
 
     def flushall
       @servers.map {|s| s.flushall }
-    end
-
-    def mock!
-      @servers.map! {|s| Mock.new }
-      @bucket2server.keys.each_with_index do|k,i|
-        @bucket2server[k] = @servers[i % @servers.size]
-      end
     end
 
   end
