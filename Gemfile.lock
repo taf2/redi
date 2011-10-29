@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    redi (0.0.5)
+    redi (0.0.6)
       redis
       redis-namespace
 
