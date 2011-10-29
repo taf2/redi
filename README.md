@@ -38,19 +38,21 @@ Adding a new server can be done as follows:
 * setup r3 as slave to replicate from r2.
 * update configuration to point buckets to r3
 
-      production:
-        - :host: 192.168.0.10 # r1
-          :port: 6379
-          :db: 0
-          :buckets: 0 - 64
-        - :host: 192.168.0.11 # r2
-          :port: 6380
-          :db: 0
-          :buckets: 65 - 95
-        - :host: 192.168.0.11 # r3
-          :port: 6380
-          :db: 0
-          :buckets: 96 - 127
+<code>
+     production:
+       - :host: 192.168.0.10 # r1
+         :port: 6379
+         :db: 0
+         :buckets: 0 - 64
+       - :host: 192.168.0.11 # r2
+         :port: 6380
+         :db: 0
+         :buckets: 65 - 95
+       - :host: 192.168.0.11 # r3
+         :port: 6380
+         :db: 0
+         :buckets: 96 - 127
+</code>
 
 * use bucket key prefixes to prune old keys from r2.
 
