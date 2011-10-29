@@ -4,7 +4,7 @@ require "redi/version"
 
 Gem::Specification.new do |s|
   s.name        = "redi"
-  s.version     = RedisRing::VERSION
+  s.version     = Redi::VERSION
   s.authors     = ["Todd Fisher"]
   s.email       = ["todd.fisher@livingsocial.com"]
   s.homepage    = "http://livingsocial.com/"

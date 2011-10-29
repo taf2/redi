@@ -6,6 +6,7 @@ require 'redis/hash_ring'
 require 'redis/namespace'
 
 class Redi
+  VERSION = "0.0.5"
 
   def self.get(key)
     pool.redis_by_key(key).get(key)
