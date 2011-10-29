@@ -39,25 +39,25 @@ Adding a new server can be done as follows:
 * update configuration to point buckets to r3
 
 <pre>
-     production:
-       - :host: 192.168.0.10 # r1
-         :port: 6379
-         :db: 0
-         :buckets: 0 - 64
-       - :host: 192.168.0.11 # r2
-         :port: 6380
-         :db: 0
-         :buckets: 65 - 95
-       - :host: 192.168.0.11 # r3
-         :port: 6380
-         :db: 0
-         :buckets: 96 - 127
+production:
+ - :host: 192.168.0.10 # r1
+   :port: 6379
+   :db: 0
+   :buckets: 0 - 64
+ - :host: 192.168.0.11 # r2
+   :port: 6380
+   :db: 0
+   :buckets: 65 - 95
+ - :host: 192.168.0.11 # r3
+   :port: 6380
+   :db: 0
+   :buckets: 96 - 127
 </pre>
 
 * use bucket key prefixes to prune old keys from r2.
 
   How you do this can vary depending on your application, but something like the pseudo code below is the idea:
 
-       96..127.times do|i| # NOTE: using redis here not redi as we want to talk to r2 explicitly
-         redis.del(redis.keys("n#{i}*"))
-       end
+    96..127.times do|i| # NOTE: using redis here not redi as we want to talk to r2 explicitly
+      redis.del(redis.keys("n#{i}*"))
+    end
