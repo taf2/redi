@@ -1,7 +1,7 @@
 require 'redi/pool'
 
 class Redi
-  VERSION = "0.0.5"
+  VERSION = "0.0.6"
 
   def self.get(key)
     pool.redis_by_key(key).get(key)
