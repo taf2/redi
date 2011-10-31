@@ -24,6 +24,12 @@ class TestRedi < Test::Unit::TestCase
     Redi.flushall
   end
 
+  def test_unimplemented_commands
+    assert_raises( NotImplementedError, /has not yet been implemented/ ) do
+      Redi.brpoplpush 'source', 'destination', 'timeout'
+    end
+  end
+
   def test_redis_pool
     redis = Redi.pool.redis_by_key('me:foo:1')
     assert_equal "n25", redis.namespace
