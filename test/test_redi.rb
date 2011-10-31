@@ -5,21 +5,28 @@ require 'yaml'
 TEST_CONFIG = %(
   - :host: 127.0.0.1
     :port: 6379
-    :db: 0
+    :db: 14
     :buckets: 0-64
   - :host: 127.0.0.1
     :port: 6379
-    :db: 1
+    :db: 15
     :buckets: 65-127
 )
 
 class TestRedi < Test::Unit::TestCase
 
+  def setup
+    Redi.config = YAML.load( TEST_CONFIG )
+    Redi.flushall
+  end
+
+  def teardown
+    Redi.flushall
+  end
+
   def test_redis_pool
-    pool = Redi::Pool.new(YAML.load(TEST_CONFIG))
-    redis = pool.redis_by_key('me:foo:1')
+    redis = Redi.pool.redis_by_key('me:foo:1')
     assert_equal "n25", redis.namespace
-    redis.flushall
     redis.set("me:foo:1", "hello")
     assert_equal "hello", redis.get("me:foo:1")
   end
