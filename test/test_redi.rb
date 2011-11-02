@@ -5,11 +5,11 @@ require 'yaml'
 TEST_CONFIG = %(
   - :host: 127.0.0.1
     :port: 6379
-    :db: 14
+    :db: 6
     :buckets: 0-64
   - :host: 127.0.0.1
     :port: 6379
-    :db: 15
+    :db: 7
     :buckets: 65-127
 )
 
@@ -62,12 +62,17 @@ class TestRedi < Test::Unit::TestCase
     6400.times do|i|
       key = "me:foo#{i}"
       bucket = ring1.get_node(key)
-      server = bucket2server[bucket.to_s]#ring2.get_node(name.to_s)
-      #puts "#{key} -> #{name} -> #{server}"
+      index = bucket.to_s.gsub(/n/,'').to_i
+      assert index < 128 && index >= 0, "bucket out of range: #{bucket}"
+      server = bucket2server[bucket.to_s]
       servers_used[ server.to_s ] ||= 0
       servers_used[ server.to_s ] += 1
       buckets_used[ bucket.to_s ] ||= 0
       buckets_used[ bucket.to_s ] += 1
     end
+
+    assert_equal 3228, servers_used["s0"], "when hashing 6400 times in sequence, s0 should have 3228 hits"
+    assert_equal 3172, servers_used["s1"], "when hashing 6400 times in sequence, s1 should have 3172 hits"
+
   end
 end
