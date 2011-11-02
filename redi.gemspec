@@ -5,8 +5,8 @@ require "redi/version"
 Gem::Specification.new do |s|
   s.name        = "redi"
   s.version     = Redi::VERSION
-  s.authors     = ["Todd Fisher"]
-  s.email       = ["todd.fisher@livingsocial.com"]
+  s.authors     = ["Todd Fisher", "Ben Bleything"]
+  s.email       = ["todd.fisher@livingsocial.com", "ben@bleything.net"]
   s.homepage    = "http://livingsocial.com/"
   s.summary     = %q{Redi multi redis scaling "to infinity and beyond!"}
   s.description = %q{hash keys to intermediate buckets allowing you to more easily scale out to more severs later}
