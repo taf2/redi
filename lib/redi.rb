@@ -34,9 +34,8 @@ class Redi
     pool.flushall
   end
 
-  def self.pool(mock=false)
-    require 'redi/mock' if mock
-    @pool ||= Pool.new(self.config,mock)
+  def self.pool
+    @pool ||= Pool.new(self.config)
   end
 
   def self.config=(config)

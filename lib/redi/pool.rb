@@ -22,7 +22,7 @@ require 'redis/namespace'
 class Redi
   class Pool
     attr_reader :keyspace, :servers
-    def initialize(config,mock=false)
+    def initialize(config)
       key_type = Struct.new(:id, :to_s)
 
       # build server pool
@@ -31,12 +31,7 @@ class Redi
       @servers = config.map {|cfg|
         bucket_range = cfg.delete(:buckets)
         s, e = bucket_range.split('-').map {|n| n.to_i }
-        if mock
-          require 'redi/mock'
-          conn = Mock.new
-        else
-          conn = Redis.new(cfg)
-        end
+        conn = Redis.new(cfg)
         (s..e).each do|i|
           bucket_name = "n#{i}"
           buckets << key_type.new(i, bucket_name)
