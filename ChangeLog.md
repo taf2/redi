@@ -1,3 +1,7 @@
+0.8.7
+-----
+* Improve test runtime to not nuke all dbs @bleything
+
 0.0.7
 -----
 * Complete redis interface @bleything
