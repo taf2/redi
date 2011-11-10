@@ -13,7 +13,7 @@ class Redi
     psubscribe publish punsubscribe subscribe unsubscribe
     discard exec multi unwatch watch
     auth echo ping quit select
-    bgrewriteaof bgsave config dbsize debug flushdb info lastsave monitor save shutdown slaveof slowlog sync
+    bgrewriteaof bgsave config dbsize debug info lastsave monitor save shutdown slaveof slowlog sync
   ]
 
   ### raise exceptions on unimplemented/unknown commands, delegate
@@ -24,6 +24,10 @@ class Redi
     end
 
     pool.redis_by_key( args.first ).send( cmd, *args )
+  end
+
+  def self.flushdb
+    pool.flushdb
   end
 
   def self.flushall

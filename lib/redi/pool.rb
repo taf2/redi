@@ -63,5 +63,9 @@ class Redi
       @servers.map {|s| s.flushall }
     end
 
+    def flushdb
+      @servers.each {|s| s.flushdb }
+    end
+
   end
 end
