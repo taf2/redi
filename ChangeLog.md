@@ -1,4 +1,4 @@
-0.8.7
+0.0.8
 -----
 * Improve test runtime to not nuke all dbs @bleything
 
