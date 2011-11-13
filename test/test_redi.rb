@@ -17,11 +17,11 @@ class TestRedi < Test::Unit::TestCase
 
   def setup
     Redi.config = YAML.load( TEST_CONFIG )
-    Redi.flushall
+    Redi.flushdb
   end
 
   def teardown
-    Redi.flushall
+    Redi.flushdb
   end
 
   def test_unimplemented_commands
