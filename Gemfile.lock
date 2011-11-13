@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     redi (0.0.8)
-      redis
-      redis-namespace
+      redis (>= 2.2.0)
+      redis-namespace (>= 1.1.0)
 
 GEM
   remote: http://rubygems.org/

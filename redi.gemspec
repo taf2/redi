@@ -21,6 +21,6 @@ Gem::Specification.new do |s|
   # specify any dependencies here; for example:
   s.add_development_dependency "rake"
 
-  s.add_runtime_dependency "redis"
-  s.add_runtime_dependency "redis-namespace"
+  s.add_runtime_dependency "redis",           '>= 2.2.0'
+  s.add_runtime_dependency "redis-namespace", '>= 1.1.0'
 end
