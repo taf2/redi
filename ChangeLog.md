@@ -1,3 +1,8 @@
+0.0.9
+-----
+* ensure tests don't kill all dbs
+* add explicit versions on redis and redis-namespace dependencies
+
 0.0.8
 -----
 * Improve test runtime to not nuke all dbs @bleything
