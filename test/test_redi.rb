@@ -1,3 +1,4 @@
+# Copyright (C) 2011 by LivingSocial, Inc.
 require 'test/unit'
 require 'redi'
 require 'yaml'

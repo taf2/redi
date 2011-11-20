@@ -1,3 +1,4 @@
+# Copyright (C) 2011 by LivingSocial, Inc.
 require 'rubygems'
 
 require 'redis'
